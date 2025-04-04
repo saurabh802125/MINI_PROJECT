@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -9,6 +8,7 @@ import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import ExamTypeSelection from "./pages/ExamTypeSelection";
 import CieExamSetup from "./pages/CieExamSetup";
 import SemesterExamSetup from "./pages/SemesterExamSetup";
 import GenerateQuestions from "./pages/GenerateQuestions";
@@ -40,6 +40,7 @@ const App = () => (
             {/* Protected routes */}
             <Route element={<SecureRoute />}>
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/exam-type-selection" element={<ExamTypeSelection />} />
               <Route path="/cie-exam-setup" element={<CieExamSetup />} />
               <Route path="/semester-exam-setup" element={<SemesterExamSetup />} />
               <Route path="/generate-questions" element={<GenerateQuestions />} />

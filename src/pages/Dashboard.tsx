@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -7,7 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Separator } from "@/components/ui/separator";
 import { coursesAPI, examsAPI } from "@/lib/api";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2, BookOpen, AlarmClock, FileText } from "lucide-react";
+import { Loader2, BookOpen, AlarmClock, FileText, PenLine, Pencil } from "lucide-react";
 
 interface Course {
   _id: string;
@@ -66,6 +65,11 @@ const Dashboard = () => {
     });
   };
 
+  const handleCreateExam = () => {
+    // Navigate to the exam type selection page
+    navigate("/exam-type-selection");
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -89,6 +93,26 @@ const Dashboard = () => {
         </div>
 
         <Separator />
+
+        {/* Create new exam card */}
+        <Card className="bg-primary/5 border-primary/20">
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <PenLine className="mr-2 h-5 w-5" />
+              Create New Exam
+            </CardTitle>
+            <CardDescription>Start creating a new examination paper</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-gray-600 mb-4">
+              Choose between Continuous Internal Evaluation (CIE) or Semester End Examination (SEE)
+              to generate a customized question paper for your course.
+            </p>
+            <Button onClick={handleCreateExam} className="w-full">
+              Create New Exam
+            </Button>
+          </CardContent>
+        </Card>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card>
@@ -115,11 +139,6 @@ const Dashboard = () => {
                 <p className="text-gray-500">No courses assigned yet</p>
               )}
             </CardContent>
-            <CardFooter>
-              <Button variant="outline" className="w-full" onClick={() => navigate("/semester-exam-setup")}>
-                SEE EXAM
-              </Button>
-            </CardFooter>
           </Card>
 
           <Card>
@@ -144,11 +163,6 @@ const Dashboard = () => {
                 <p className="text-gray-500">No exams created yet</p>
               )}
             </CardContent>
-            <CardFooter>
-              <Button variant="outline" className="w-full" onClick={() => navigate("/cie-exam-setup")}>
-                CIE Exam
-              </Button>
-            </CardFooter>
           </Card>
 
           <Card>
