@@ -1,3 +1,4 @@
+// src/pages/Register.tsx
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -11,6 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import { coursesAPI } from "@/lib/api";
+import NetworkGridBackground from "@/components/NetworkGridBackground";
 
 interface Course {
   _id: string;
@@ -44,7 +46,6 @@ const Register = () => {
       });
       return;
     }
-    
     
     try {
       setIsLoadingCourses(true);
@@ -122,184 +123,188 @@ const Register = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <div className="w-full max-w-md p-4">
-        <Card className="shadow-lg">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-center">Exam-Scribe AI</CardTitle>
-            <CardDescription className="text-center">
-              {step === 1 ? "Create an educator account" : "Complete your profile"}
-            </CardDescription>
-          </CardHeader>
-          
-          <CardContent>
-            {step === 1 ? (
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label>
-                  <Input 
-                    id="name"
-                    type="text" 
-                    placeholder="Enter your name" 
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input 
-                    id="email"
-                    type="email" 
-                    placeholder="Saurabhkumar@gmail.com" 
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
-                  <Input 
-                    id="password"
-                    type="password" 
-                    placeholder="••••••••" 
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                  <p className="text-xs text-gray-500">
-                    Password must be at least 6 characters long.
-                  </p>
-                </div>
-                
-                <Button 
-                  type="button" 
-                  className="w-full" 
-                  onClick={goToStep2}
-                  disabled={isLoadingCourses}
-                >
-                  {isLoadingCourses ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Loading...
-                    </>
-                  ) : (
-                    "Continue"
-                  )}
-                </Button>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="department">Department</Label>
-                  <Select 
-                    value={department} 
-                    onValueChange={setDepartment}
-                    required
-                  >
-                    <SelectTrigger id="department">
-                      <SelectValue placeholder="Select department" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Computer Science">Computer Science</SelectItem>
-                      <SelectItem value="Information Technology">Information Technology</SelectItem>
-                      <SelectItem value="Electronics">Electronics</SelectItem>
-                      <SelectItem value="Mechanical">Mechanical</SelectItem>
-                      <SelectItem value="Civil">Civil</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="semester">Semester</Label>
-                  <Select 
-                    value={semester} 
-                    onValueChange={setSemester}
-                    required
-                  >
-                    <SelectTrigger id="semester">
-                      <SelectValue placeholder="Select semester" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="1">Semester 1</SelectItem>
-                      <SelectItem value="2">Semester 2</SelectItem>
-                      <SelectItem value="3">Semester 3</SelectItem>
-                      <SelectItem value="4">Semester 4</SelectItem>
-                      <SelectItem value="5">Semester 5</SelectItem>
-                      <SelectItem value="6">Semester 6</SelectItem>
-                      <SelectItem value="7">Semester 7</SelectItem>
-                      <SelectItem value="8">Semester 8</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label>Select Courses</Label>
-                  <div className="border rounded-md p-4 space-y-2">
-                    {availableCourses.map((course) => (
-                      <div key={course._id} className="flex items-center space-x-2">
-                        <Checkbox 
-                          id={`course-${course.code}`}
-                          checked={selectedCourses.includes(course.code)}
-                          onCheckedChange={() => handleCourseToggle(course.code)}
-                        />
-                        <Label htmlFor={`course-${course.code}`} className="flex-1">
-                          {course.name} ({course.code})
-                        </Label>
-                      </div>
-                    ))}
-                    {availableCourses.length === 0 && (
-                      <p className="text-sm text-gray-500">No courses available</p>
-                    )}
+    <NetworkGridBackground>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="w-full max-w-md p-4">
+          <Card className="shadow-xl backdrop-blur-sm bg-black/30 border-cyan-500/30">
+            <CardHeader className="space-y-1">
+              <CardTitle className="text-2xl font-bold text-center text-white">Exam-Scribe AI</CardTitle>
+              <CardDescription className="text-center text-cyan-100">
+                {step === 1 ? "Create an educator account" : "Complete your profile"}
+              </CardDescription>
+            </CardHeader>
+            
+            <CardContent>
+              {step === 1 ? (
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name" className="text-cyan-100">Full Name</Label>
+                    <Input 
+                      id="name"
+                      type="text" 
+                      placeholder="Enter your name" 
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      required
+                      className="bg-black/40 border-cyan-500/30 text-white placeholder:text-cyan-200/40 focus-visible:ring-cyan-500/50"
+                    />
                   </div>
-                  <p className="text-xs text-gray-500">
-                    Please select at least one course that you teach.
-                  </p>
-                </div>
-
-                
-                
-                <div className="pt-4 flex space-x-2">
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className="text-cyan-100">Email</Label>
+                    <Input 
+                      id="email"
+                      type="email" 
+                      placeholder="your.email@example.com" 
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className="bg-black/40 border-cyan-500/30 text-white placeholder:text-cyan-200/40 focus-visible:ring-cyan-500/50"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="password" className="text-cyan-100">Password</Label>
+                    <Input 
+                      id="password"
+                      type="password" 
+                      placeholder="••••••••" 
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      className="bg-black/40 border-cyan-500/30 text-white placeholder:text-cyan-200/40 focus-visible:ring-cyan-500/50"
+                    />
+                    <p className="text-xs text-cyan-200/70">
+                      Password must be at least 6 characters long.
+                    </p>
+                  </div>
+                  
                   <Button 
                     type="button" 
-                    variant="outline"
-                    onClick={() => setStep(1)}
-                    className="flex-1"
+                    className="w-full bg-cyan-600 hover:bg-cyan-500 text-white" 
+                    onClick={goToStep2}
+                    disabled={isLoadingCourses}
                   >
-                    Back
-                  </Button>
-                  <Button 
-                    type="submit" 
-                    className="flex-1"
-                    disabled={isLoading}
-                  >
-                    {isLoading ? (
+                    {isLoadingCourses ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Registering...
+                        Loading...
                       </>
                     ) : (
-                      "Register"
+                      "Continue"
                     )}
                   </Button>
                 </div>
-              </form>
-            )}
-          </CardContent>
-          
-          <CardFooter className="flex flex-col space-y-2">
-            <div className="text-sm text-center">
-              Already have an account?{" "}
-              <Link to="/login" className="text-primary hover:underline">
-                Log in
-              </Link>
-            </div>
-          </CardFooter>
-        </Card>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="department" className="text-cyan-100">Department</Label>
+                    <Select 
+                      value={department} 
+                      onValueChange={setDepartment}
+                      required
+                    >
+                      <SelectTrigger id="department" className="bg-black/40 border-cyan-500/30 text-white">
+                        <SelectValue placeholder="Select department" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-slate-800 text-white border-slate-700">
+                        <SelectItem value="Computer Science">Computer Science</SelectItem>
+                        <SelectItem value="Information Technology">Information Technology</SelectItem>
+                        <SelectItem value="Electronics">Electronics</SelectItem>
+                        <SelectItem value="Mechanical">Mechanical</SelectItem>
+                        <SelectItem value="Civil">Civil</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="semester" className="text-cyan-100">Semester</Label>
+                    <Select 
+                      value={semester} 
+                      onValueChange={setSemester}
+                      required
+                    >
+                      <SelectTrigger id="semester" className="bg-black/40 border-cyan-500/30 text-white">
+                        <SelectValue placeholder="Select semester" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-slate-800 text-white border-slate-700">
+                        <SelectItem value="1">Semester 1</SelectItem>
+                        <SelectItem value="2">Semester 2</SelectItem>
+                        <SelectItem value="3">Semester 3</SelectItem>
+                        <SelectItem value="4">Semester 4</SelectItem>
+                        <SelectItem value="5">Semester 5</SelectItem>
+                        <SelectItem value="6">Semester 6</SelectItem>
+                        <SelectItem value="7">Semester 7</SelectItem>
+                        <SelectItem value="8">Semester 8</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label className="text-cyan-100">Select Courses</Label>
+                    <div className="border border-white/20 rounded-md p-4 space-y-2 bg-black/30">
+                      {availableCourses.map((course) => (
+                        <div key={course._id} className="flex items-center space-x-2">
+                          <Checkbox 
+                            id={`course-${course.code}`}
+                            checked={selectedCourses.includes(course.code)}
+                            onCheckedChange={() => handleCourseToggle(course.code)}
+                            className="border-white/50 data-[state=checked]:bg-cyan-600 data-[state=checked]:border-cyan-600"
+                          />
+                          <Label htmlFor={`course-${course.code}`} className="flex-1 text-cyan-100 cursor-pointer">
+                            {course.name} ({course.code})
+                          </Label>
+                        </div>
+                      ))}
+                      {availableCourses.length === 0 && (
+                        <p className="text-sm text-cyan-200/70">No courses available</p>
+                      )}
+                    </div>
+                    <p className="text-xs text-cyan-200/70">
+                      Please select at least one course that you teach.
+                    </p>
+                  </div>
+                  
+                  <div className="pt-4 flex space-x-2">
+                    <Button 
+                      type="button" 
+                      variant="outline"
+                      onClick={() => setStep(1)}
+                      className="flex-1 bg-transparent border-white/30 text-white hover:bg-white/10"
+                    >
+                      Back
+                    </Button>
+                    <Button 
+                      type="submit" 
+                      className="flex-1 bg-cyan-600 hover:bg-cyan-500"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Registering...
+                        </>
+                      ) : (
+                        "Register"
+                      )}
+                    </Button>
+                  </div>
+                </form>
+              )}
+            </CardContent>
+            
+            <CardFooter className="flex flex-col space-y-2">
+              <div className="text-sm text-center text-cyan-100">
+                Already have an account?{" "}
+                <Link to="/login" className="text-cyan-400 hover:underline">
+                  Log in
+                </Link>
+              </div>
+            </CardFooter>
+          </Card>
+        </div>
       </div>
-    </div>
+    </NetworkGridBackground>
   );
 };
 

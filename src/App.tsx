@@ -12,6 +12,7 @@ import ExamTypeSelection from "./pages/ExamTypeSelection";
 import CieExamSetup from "./pages/CieExamSetup";
 import SemesterExamSetup from "./pages/SemesterExamSetup";
 import GenerateQuestions from "./pages/GenerateQuestions";
+import WelcomeSplash from "./pages/WelcomeSplash"; // Add this import
 import { AuthProvider } from "./contexts/AuthContext";
 import SecureRoute from "./components/SecureRoute";
 
@@ -32,8 +33,10 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
+            {/* Welcome splash screen as root route */}
+            <Route path="/" element={<WelcomeSplash />} /> {/* Changed this line */}
+            
             {/* Public routes */}
-            <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             
