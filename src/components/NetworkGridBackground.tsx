@@ -3,22 +3,38 @@
 import React, { useEffect, useRef } from 'react';
 
 const NetworkGridBackground = ({ children, className = "" }) => {
-  const canvasRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
+
     const ctx = canvas.getContext('2d');
-    let animationFrameId;
-    let particles = [];
-    let connections = [];
+    if (!ctx) return;
+
+    let animationFrameId: number;
+    let particles: any[] = [];
+    let connections: any[] = [];
     
     // Resize handler to make canvas full screen and high resolution
     const handleResize = () => {
       const pixelRatio = window.devicePixelRatio || 1;
+      
+      // Set canvas to cover the entire document height, not just viewport
       canvas.width = window.innerWidth * pixelRatio;
-      canvas.height = window.innerHeight * pixelRatio;
+      canvas.height = Math.max(
+        document.documentElement.scrollHeight, 
+        document.body.scrollHeight, 
+        window.innerHeight
+      ) * pixelRatio;
+      
       canvas.style.width = `${window.innerWidth}px`;
-      canvas.style.height = `${window.innerHeight}px`;
+      canvas.style.height = `${Math.max(
+        document.documentElement.scrollHeight, 
+        document.body.scrollHeight, 
+        window.innerHeight
+      )}px`;
+      
       ctx.scale(pixelRatio, pixelRatio);
       
       // Regenerate particles
@@ -35,7 +51,11 @@ const NetworkGridBackground = ({ children, className = "" }) => {
       
       for (let i = 0; i < particleCount; i++) {
         const x = Math.random() * window.innerWidth;
-        const y = Math.random() * window.innerHeight;
+        const y = Math.random() * Math.max(
+          document.documentElement.scrollHeight, 
+          document.body.scrollHeight, 
+          window.innerHeight
+        );
         const size = Math.random() * 3 + 1;
         const speedX = (Math.random() - 0.5) * 0.5;
         const speedY = (Math.random() - 0.5) * 0.5;
@@ -47,7 +67,11 @@ const NetworkGridBackground = ({ children, className = "" }) => {
       // Create some fixed, larger node particles
       for (let i = 0; i < 8; i++) {
         const x = Math.random() * window.innerWidth;
-        const y = Math.random() * window.innerHeight;
+        const y = Math.random() * Math.max(
+          document.documentElement.scrollHeight, 
+          document.body.scrollHeight, 
+          window.innerHeight
+        );
         const size = Math.random() * 8 + 4;
         const speedX = (Math.random() - 0.5) * 0.2;
         const speedY = (Math.random() - 0.5) * 0.2;
@@ -65,17 +89,25 @@ const NetworkGridBackground = ({ children, className = "" }) => {
         }
       }
       
-      // Create grid lines
+      // Create grid lines across the entire document height
       const gridSize = 30;
       const gridOffsetX = window.innerWidth % gridSize / 2;
-      const gridOffsetY = window.innerHeight % gridSize / 2;
+      const gridOffsetY = Math.max(
+        document.documentElement.scrollHeight, 
+        document.body.scrollHeight, 
+        window.innerHeight
+      ) % gridSize / 2;
       
       for (let x = gridOffsetX; x < window.innerWidth; x += gridSize) {
         const brightness = Math.random() * 0.2 + 0.05;
         connections.push({ type: 'gridX', x, brightness });
       }
       
-      for (let y = gridOffsetY; y < window.innerHeight; y += gridSize) {
+      for (let y = gridOffsetY; y < Math.max(
+        document.documentElement.scrollHeight, 
+        document.body.scrollHeight, 
+        window.innerHeight
+      ); y += gridSize) {
         const brightness = Math.random() * 0.2 + 0.05;
         connections.push({ type: 'gridY', y, brightness });
       }
@@ -83,28 +115,29 @@ const NetworkGridBackground = ({ children, className = "" }) => {
 
     // Animation function
     const animate = () => {
+      // Clear the entire canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
       // Draw the background gradient
-      const gradient = ctx.createLinearGradient(0, 0, 0, window.innerHeight);
+      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
       gradient.addColorStop(0, '#000922');
       gradient.addColorStop(1, '#000215');
       ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
       
       // Draw grid lines
       connections.forEach(connection => {
         if (connection.type === 'gridX') {
           ctx.beginPath();
           ctx.moveTo(connection.x, 0);
-          ctx.lineTo(connection.x, window.innerHeight);
+          ctx.lineTo(connection.x, canvas.height);
           ctx.strokeStyle = `rgba(0, 149, 255, ${connection.brightness})`;
           ctx.lineWidth = 0.3;
           ctx.stroke();
         } else if (connection.type === 'gridY') {
           ctx.beginPath();
           ctx.moveTo(0, connection.y);
-          ctx.lineTo(window.innerWidth, connection.y);
+          ctx.lineTo(canvas.width, connection.y);
           ctx.strokeStyle = `rgba(0, 149, 255, ${connection.brightness})`;
           ctx.lineWidth = 0.3;
           ctx.stroke();
@@ -112,16 +145,22 @@ const NetworkGridBackground = ({ children, className = "" }) => {
       });
       
       // Update and draw particles
-      particles.forEach((particle, index) => {
+      particles.forEach((particle) => {
         // Update position
         particle.x += particle.speedX;
         particle.y += particle.speedY;
         
         // Wrap around screen edges
-        if (particle.x < 0) particle.x = window.innerWidth;
-        if (particle.x > window.innerWidth) particle.x = 0;
-        if (particle.y < 0) particle.y = window.innerHeight;
-        if (particle.y > window.innerHeight) particle.y = 0;
+        const maxHeight = Math.max(
+          document.documentElement.scrollHeight, 
+          document.body.scrollHeight, 
+          window.innerHeight
+        );
+        
+        if (particle.x < 0) particle.x = canvas.width;
+        if (particle.x > canvas.width) particle.x = 0;
+        if (particle.y < 0) particle.y = maxHeight;
+        if (particle.y > maxHeight) particle.y = 0;
         
         // Draw particle
         ctx.beginPath();
@@ -198,11 +237,14 @@ const NetworkGridBackground = ({ children, className = "" }) => {
   }, []);
 
   return (
-    <div className={`relative min-h-screen w-full overflow-hidden ${className}`}>
+    <div className={`relative min-h-screen w-full ${className}`}>
       <canvas 
         ref={canvasRef} 
-        className="absolute top-0 left-0 w-full h-full" 
-        style={{ zIndex: 0 }}
+        className="fixed top-0 left-0 w-full h-full" 
+        style={{ 
+          zIndex: -1, 
+          pointerEvents: 'none' 
+        }}
       />
       <div className="relative z-10">
         {children}

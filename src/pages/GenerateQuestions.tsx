@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -7,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { ArrowLeft, Download, Loader2 } from "lucide-react";
+import NetworkGridBackground from "@/components/NetworkGridBackground";
 
 interface QuestionConfig {
   questionId: string;
@@ -307,72 +307,76 @@ const GenerateQuestions = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex items-center">
-          <Button variant="ghost" size="sm" onClick={goBack} className="mr-4">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back
-          </Button>
-          <h1 className="text-2xl font-bold text-gray-900">Generated Question Paper</h1>
-        </div>
-      </header>
-      
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="px-4 py-6 sm:px-0">
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle className="flex justify-between items-center">
-                <span>Question Paper</span>
-                <div className="flex space-x-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={handleRegenerateQuestions}
-                    disabled={isGenerating}
-                  >
-                    {isGenerating ? (
-                      <>
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        Generating...
-                      </>
-                    ) : (
-                      "Regenerate"
-                    )}
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={handleDownload}
-                    disabled={!generatedQuestions || isGenerating}
-                  >
-                    <Download className="h-4 w-4 mr-2" />
-                    Download
-                  </Button>
-                </div>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {isGenerating ? (
-                <div className="flex flex-col items-center justify-center py-12">
-                  <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
-                  <p className="text-lg font-medium">Generating questions...</p>
-                  <p className="text-sm text-muted-foreground">
-                    Our AI is creating a balanced question paper based on your specifications
-                  </p>
-                </div>
-              ) : (
-                <Textarea 
-                  value={generatedQuestions} 
-                  onChange={(e) => setGeneratedQuestions(e.target.value)}
-                  className="font-mono min-h-[60vh] text-sm"
-                />
-              )}
-            </CardContent>
-          </Card>
-        </div>
-      </main>
-    </div>
+    <NetworkGridBackground>
+      <div className="min-h-screen">
+        <header className="bg-black/40 backdrop-blur-sm border-b border-cyan-500/20 shadow-sm">
+          <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex items-center">
+            <Button variant="ghost" size="sm" onClick={goBack} className="mr-4 text-cyan-100 hover:bg-cyan-900/30 hover:text-white">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back
+            </Button>
+            <h1 className="text-2xl font-bold text-white">Generated Question Paper</h1>
+          </div>
+        </header>
+        
+        <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+          <div className="px-4 py-6 sm:px-0">
+            <Card className="mb-6 bg-black/40 backdrop-blur-sm border-cyan-400/30 shadow-lg">
+              <CardHeader>
+                <CardTitle className="flex justify-between items-center text-white">
+                  <span>Question Paper</span>
+                  <div className="flex space-x-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={handleRegenerateQuestions}
+                      disabled={isGenerating}
+                      className="text-cyan-100 hover:bg-cyan-900/30 hover:text-white border-cyan-500/30"
+                    >
+                      {isGenerating ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Generating...
+                        </>
+                      ) : (
+                        "Regenerate"
+                      )}
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={handleDownload}
+                      disabled={!generatedQuestions || isGenerating}
+                      className="text-cyan-100 hover:bg-cyan-900/30 hover:text-white border-cyan-500/30"
+                    >
+                      <Download className="h-4 w-4 mr-2" />
+                      Download
+                    </Button>
+                  </div>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {isGenerating ? (
+                  <div className="flex flex-col items-center justify-center py-12 text-white">
+                    <Loader2 className="h-8 w-8 animate-spin text-cyan-400 mb-4" />
+                    <p className="text-lg font-medium">Generating questions...</p>
+                    <p className="text-sm text-cyan-200/70">
+                      Our AI is creating a balanced question paper based on your specifications
+                    </p>
+                  </div>
+                ) : (
+                  <Textarea 
+                    value={generatedQuestions} 
+                    onChange={(e) => setGeneratedQuestions(e.target.value)}
+                    className="font-mono min-h-[60vh] text-sm bg-black/40 border-cyan-500/30 text-white"
+                  />
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </main>
+      </div>
+    </NetworkGridBackground>
   );
 };
 
